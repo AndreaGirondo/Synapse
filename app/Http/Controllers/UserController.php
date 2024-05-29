@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUser;
-// use App\Http\Requests\LogUserRequest;
+use App\Http\Requests\LoginUser;
 // use App\Http\Requests\UserUpdate;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\User;
+
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
     {
         try{
             $user = new User();
-            $user->name = e($request->name); // e() permet de protéger les données qui pourrai échapper (HTML) cela est pour contrer les attaques XSS
+            $user->name = e($request->name); 
             $user->email = e($request->email);
             $user->password = e($request->password);
             $user->save();
@@ -29,8 +30,6 @@ class UserController extends Controller
 
         }catch(Exception $e)
         {
-            Log::error($e); // Log permet de sauvegarder les erreurs dans un fichier de log
-        
             return response()->json([
                 'status_code' => 500,
                 'status_message' => 'Une erreur est survenue. Veuillez réessayer plus tard.',
@@ -38,26 +37,26 @@ class UserController extends Controller
         }
     }
 
-    // public function login(LogUserRequest $request){
-    //     if(auth()->attempt($request->only(['email','password']))){ /* verification de la cohérence du mail et du mot de passe a un user pour le conecter, si les information son vrai, attempt renvera true */
+    public function login(LoginUser $request){
+        if(auth()->attempt($request->only(['email','password']))){ /* verification de la cohérence du mail et du mot de passe a un user pour le conecter, si les information son vrai, attempt renvera true */
 
-    //         $user = auth()->user();
-    //         $token = $user->createToken('MA_CLEF_SECRETE_VISIBLE_AU_BACK')->plainTextToken;
+            $user = auth()->user();
+            $token = $user->createToken('MA_CLEF_SECRETE_VISIBLE_AU_BACK')->plainTextToken;
 
-    //         return response()->json([
-    //             'status_code'=>201,  
-    //             'status_message'=>'Utilisateur connecté',
-    //             'user'=>$user,
-    //             'token'=>$token
-    //         ]);
+            return response()->json([
+                'status_code'=>201,  
+                'status_message'=>'Utilisateur connecté',
+                'user'=>$user,
+                'token'=>$token
+            ]);
 
-    //     }else{
-    //         return response()->json([
-    //             'status_code'=>403,  
-    //             'status_message'=>'Information non valide',
-    //         ]);
-    //     }
-    // }
+        }else{
+            return response()->json([
+                'status_code'=>403,  
+                'status_message'=>'Information non valide',
+            ]);
+        }
+    }
 
     // public function update(UserUpdate $request, $id)
     // {

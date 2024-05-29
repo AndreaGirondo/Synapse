@@ -23,7 +23,7 @@ class RegisterUser extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return [ 
             'name' => ['required', 'string', 'max:50', 'alpha'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'],
             'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[@$!%*#?&]/'],
