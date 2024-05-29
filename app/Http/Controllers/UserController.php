@@ -26,14 +26,14 @@ class UserController extends Controller
                 'status_code'=>201,  
                 'status_message'=>'L\'utilisateur a bien été créé',
                 'user'=>$user
-            ]);
+            ], 201);
 
         }catch(Exception $e)
         {
             return response()->json([
                 'status_code' => 500,
                 'status_message' => 'Une erreur est survenue. Veuillez réessayer plus tard.',
-            ]);
+            ], 500);
         }
     }
 
@@ -44,17 +44,17 @@ class UserController extends Controller
             $token = $user->createToken('MA_CLEF_SECRETE_VISIBLE_AU_BACK')->plainTextToken;
 
             return response()->json([
-                'status_code'=>201,  
+                'status_code'=>200,  
                 'status_message'=>'Utilisateur connecté',
                 'user'=>$user,
                 'token'=>$token
-            ]);
+            ], 200);
 
         }else{
             return response()->json([
-                'status_code'=>403,  
-                'status_message'=>'Information non valide',
-            ]);
+                'status_code' => 401,
+                'message' => 'Cette adresse email n\'existe pas ou le mot de passe est incorrect.',
+            ], 401);
         }
     }
 

@@ -32,12 +32,12 @@ class LoginUser extends FormRequest
     public function failedValidation(Validator $validator)  
     {
         throw new HttpResponseException(response()->json([
-            'success'=>false,
-            'statut_code'=>422,
-            'error'=>true,
-            'message'=>'Erreur de validation',
-            'errorsList'=>$validator->errors()
-        ]));
+            'success' => false,
+            'statut_code' => 422,
+            'error' => true,
+            'message' => 'Erreur de validation',
+            'errorsList' => $validator->errors()
+        ], 422));
     }
 
     public function messages(){
